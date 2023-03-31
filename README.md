@@ -1,8 +1,10 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/ik2dgnluc7qe89mw/branch/main?svg=true)](https://ci.appveyor.com/project/mgorshkov/pd/branch/main)
+
 # About
 Methods from pandas library on top of NP library.
 
 # Latest artifact
-https://mgorshkov.jfrog.io/artifactory/default-generic-local/scipy/pd-0.0.1.tgz
+https://mgorshkov.jfrog.io/artifactory/default-generic-local/pd/pd-0.0.1.tgz
 
 # Requirements
 Any C++17-compatible compiler:
@@ -42,7 +44,7 @@ cmake .. -DCMAKE_INSTALL_PREFIX:PATH=~/pd_install
 cmake --build . --target install
 ```
 
-# Usage example (samples/stats)
+# Usage example (samples/read_csv)
 ```
 #include <iostream>
 
