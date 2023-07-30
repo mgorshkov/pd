@@ -66,12 +66,12 @@ Name: Glucose, Length: 7, dtype: float64
 TEST_F(SeriesTest, ilocTest) {
     Series pregnancies{np::Array<np::float_>{6, 1, 8, 1, 0, 5, 3}, "Pregnancies"};
     {
-        const np::float_ *result = pregnancies.iloc(0);
-        EXPECT_EQ(*result, 6);
+        auto result = pregnancies.iloc(0);
+        EXPECT_EQ(result, internal::Value{6.0});
     }
     {
-        const np::float_ *result = pregnancies.iloc(6);
-        EXPECT_EQ(*result, 3);
+        auto result = pregnancies.iloc(6);
+        EXPECT_EQ(result, internal::Value{3.0});
     }
 
     auto iLocSeries = pregnancies.iloc(":3");

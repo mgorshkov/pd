@@ -2,17 +2,7 @@ cmake_minimum_required(VERSION 3.13.0)
 
 set(PD_UNIT_TESTS pd_unit_tests)
 
-project(${PD_UNIT_TESTS} VERSION 0.0.1 DESCRIPTION "Pd Unit Tests")
-
-set(CMAKE_CXX_STANDARD 17)
-
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-if (NOT DEFINED CMAKE_INSTALL_BINDIR)
-    set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
-endif()
+project(${PD_UNIT_TESTS} VERSION 0.0.2 DESCRIPTION "Pd Unit Tests")
 
 add_definitions(-DTEST_DATA_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/test_data")
 
