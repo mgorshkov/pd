@@ -1,27 +1,23 @@
 cmake_minimum_required(VERSION 3.13.0)
 
-set(PROJECT read_csv)
+set(READ_CSV read_csv)
 
-project(${PROJECT})
-
-if (NOT DEFINED CMAKE_INSTALL_BINDIR)
-    set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
-endif()
+project(${READ_CSV})
 
 include_directories(../../include ${np_SOURCE_DIR}/include ${openssl_BINARY_DIR}/include)
 
-add_executable(${PROJECT})
+add_executable(${READ_CSV})
 
-target_sources(${PROJECT} PUBLIC main.cpp)
+target_sources(${READ_CSV} PUBLIC main.cpp)
 
 target_link_libraries(
-    ${PROJECT}
+    ${READ_CSV}
     ${PTHREAD}
     pd
     ssl)
 
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${READ_CSV}
     DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT ${PROJECT}
+    COMPONENT ${READ_CSV}
 )

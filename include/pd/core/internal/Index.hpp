@@ -37,16 +37,22 @@ namespace pd {
 
             explicit Index(const std::vector<internal::Value> &index)
                 : m_namedIndex{index}, m_count{0} {
+                for (np::Size i = 0; i < index.size(); ++i) {
+                    m_nameToOffset[index[i]] = i;
+                }
             }
 
             explicit Index(np::Size count)
-                : m_count{count} {
+                : m_namedIndex{}, m_nameToOffset{}, m_count{count} {
             }
 
             Index(const std::vector<internal::Value> &index, np::Size count)
-                : m_namedIndex{index}, m_count{count} {
+                : m_namedIndex{index}, m_nameToOffset{}, m_count{count} {
                 if (!index.empty() && count > 0) {
                     throw std::runtime_error("Invalid index");
+                }
+                for (np::Size i = 0; i < index.size(); ++i) {
+                    m_nameToOffset[index[i]] = i;
                 }
             }
 
@@ -55,7 +61,9 @@ namespace pd {
 
             bool operator==(const Index &other) const {
                 if (this != &other) {
-                    return m_namedIndex == other.m_namedIndex && m_count == other.m_count;
+                    return m_namedIndex == other.m_namedIndex &&
+                           m_nameToOffset == other.m_nameToOffset &&
+                           m_count == other.m_count;
                 }
                 return true;
             }
@@ -72,12 +80,34 @@ namespace pd {
                 return m_namedIndex.empty() ? internal::Value{offset} : m_namedIndex[offset];
             }
 
+            internal::Value operator[](const internal::Value &offsetOrName) const {
+                if (m_namedIndex.empty()) {
+                    return offsetOrName;
+                }
+                auto it = m_nameToOffset.find(offsetOrName);
+                if (it != m_nameToOffset.end()) {
+                    return m_namedIndex[it->second];
+                }
+                if (offsetOrName.isInt()) {
+                    return m_namedIndex[static_cast<np::int_>(offsetOrName)];
+                } else if (offsetOrName.isIntC()) {
+                    return m_namedIndex[static_cast<np::intc>(offsetOrName)];
+                } else if (offsetOrName.isSize()) {
+                    return m_namedIndex[static_cast<np::Size>(offsetOrName)];
+                }
+                return offsetOrName;
+            }
+
             void addIndex(const Index &index) {
+                for (np::Size i = 0; i < index.size(); ++i) {
+                    m_nameToOffset[index[i]] = m_namedIndex.size() + i;
+                }
                 std::copy(index.m_namedIndex.begin(), index.m_namedIndex.end(), std::back_inserter(m_namedIndex));
                 m_count += index.m_count;
             }
 
             void addIndex(const internal::Value &value) {
+                m_nameToOffset[value] = m_namedIndex.size();
                 m_namedIndex.push_back(value);
             }
 
@@ -86,7 +116,7 @@ namespace pd {
             }
 
             [[nodiscard]] bool has(const internal::Value &value) const {
-                return std::find(m_namedIndex.cbegin(), m_namedIndex.cend(), value) != m_namedIndex.cend() ||
+                return m_nameToOffset.contains(value) ||
                        (value.isInt() && *static_cast<const np::int_ *>(value) >= 0 && *static_cast<const np::int_ *>(value) < static_cast<np::int_>(m_count));
             }
 
@@ -100,6 +130,7 @@ namespace pd {
 
         private:
             std::vector<internal::Value> m_namedIndex;
+            std::unordered_map<internal::Value, np::Size> m_nameToOffset;
             np::Size m_count{0};
         };
 

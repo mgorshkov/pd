@@ -170,32 +170,32 @@ namespace pd {
                         case ReadCsvContext::ColumnType::kInt: {
                             auto array = np::Array<np::int_>{np::Shape{context->m_totalSamples}};
                             auto series = Series{array, columnName};
-                            context->m_dataFrame.add(series);
+                            context->m_dataFrame.append(series);
                             break;
                         }
                         case ReadCsvContext::ColumnType::kFloat: {
                             auto array = np::Array<np::float_>{np::Shape{context->m_totalSamples}};
                             auto series = Series{array, columnName};
-                            context->m_dataFrame.add(series);
+                            context->m_dataFrame.append(series);
                             break;
                         }
                         case ReadCsvContext::ColumnType::kString: {
                             auto array = np::Array<np::string_>{np::Shape{context->m_totalSamples}};
                             auto series = Series{array, columnName};
-                            context->m_dataFrame.add(series);
+                            context->m_dataFrame.append(series);
                             break;
                         }
                         case ReadCsvContext::ColumnType::kUnicode: {
                             auto array = np::Array<np::unicode_>{np::Shape{context->m_totalSamples}};
                             auto series = Series{array, columnName};
-                            context->m_dataFrame.add(series);
+                            context->m_dataFrame.append(series);
                             break;
                         }
                         case ReadCsvContext::ColumnType::kNone:
                             throw std::runtime_error("Invalid column type");
                     }
                 }
-                context->m_dataFrame.at(context->m_row, columnName) = columns.at(i);
+                context->m_dataFrame.set(context->m_row, columnName, columns.at(i));
             }
         }
         if (needToAddData) {

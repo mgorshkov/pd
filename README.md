@@ -3,14 +3,11 @@
 # About
 Methods from pandas library on top of NP library.
 
-# Latest artifact
-https://mgorshkov.jfrog.io/artifactory/default-generic-local/pd/pd-0.0.1.tgz
-
 # Requirements
-Any C++17-compatible compiler:
+Any C++20-compatible compiler:
 * gcc 8 or higher
-* clang 6 or higher
-* Visual Studio 2017 or higher
+* clang 10 or higher
+* Visual Studio 2019 or higher
 
 # Repo
 ```
