@@ -153,6 +153,8 @@ namespace pd {
         [[nodiscard]] bool hasColumn(const internal::Value &column) const;
         [[nodiscard]] internal::Index columns() const;
 
+        void drop(const internal::Value &column);
+
         DataFrame operator[](np::Size row) const;
 
         [[nodiscard]] internal::Value at(np::Size row, const internal::Value &column) const;
@@ -189,7 +191,7 @@ namespace pd {
             return addVector(array);
         }
 
-        DataFrame add(const DataFrame &dataFrame) const;
+        [[nodiscard]] DataFrame add(const DataFrame &dataFrame) const;
 
         DataFrame operator+(const DataFrame &dataFrame) const {
             return add(dataFrame);
@@ -219,7 +221,7 @@ namespace pd {
             return subtractVector(array);
         }
 
-        DataFrame subtract(const DataFrame &dataFrame) const;
+        [[nodiscard]] DataFrame subtract(const DataFrame &dataFrame) const;
 
         DataFrame operator-(const DataFrame &dataFrame) const {
             return subtract(dataFrame);
@@ -249,7 +251,7 @@ namespace pd {
             return multiplyVector(array);
         }
 
-        DataFrame multiply(const DataFrame &dataFrame) const;
+        [[nodiscard]] DataFrame multiply(const DataFrame &dataFrame) const;
 
         DataFrame operator*(const DataFrame &dataFrame) const {
             return multiply(dataFrame);
@@ -279,7 +281,7 @@ namespace pd {
             return divideVector(array);
         }
 
-        DataFrame divide(const DataFrame &dataFrame) const;
+        [[nodiscard]] DataFrame divide(const DataFrame &dataFrame) const;
 
         DataFrame operator/(const DataFrame &dataFrame) const {
             return divide(dataFrame);

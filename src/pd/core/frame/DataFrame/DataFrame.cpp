@@ -108,6 +108,10 @@ namespace pd {
         return m_columns;
     }
 
+    void DataFrame::drop(const internal::Value &column) {
+        m_columnData.erase(m_columns[column]);
+    }
+
     DataFrame DataFrame::operator[](np::Size row) const {
         DataFrame dataFrame{};
         for (const auto &columnName: m_columns.getIndex()) {

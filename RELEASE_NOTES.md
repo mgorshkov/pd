@@ -1,3 +1,7 @@
+# Release 0.0.3
+## Changes
+* DataFrame drop method added
+
 # Release 0.0.2
 ## Changes
 * Statistical methods added
