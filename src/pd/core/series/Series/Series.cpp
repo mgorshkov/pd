@@ -606,7 +606,7 @@ namespace pd {
             }
         }
         np::float_ resultDiv{};
-        np::ndarray::internal::divideBySize(result, s, resultDiv);
+        np::ndarray::internal::divide(result, s, resultDiv);
         return resultDiv;
     }
 
@@ -636,7 +636,7 @@ namespace pd {
             ++count;
         }
         np::float_ resultDiv{};
-        np::ndarray::internal::divideBySize(result, count, resultDiv);
+        np::ndarray::internal::divide(result, count, resultDiv);
         return resultDiv;
     }
 

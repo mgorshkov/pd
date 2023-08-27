@@ -50,8 +50,21 @@ cmake --build . --target install
 int main(int, char **) {
     using namespace pd;
 
-    auto data = read_csv("https://github.com/adityakumar529/Coursera_Capstone/blob/master/diabetes.csv");
-    std::cout << "data.shape=" << data.shape() << std::endl;
+    auto df = read_csv("https://raw.githubusercontent.com/adityakumar529/Coursera_Capstone/master/diabetes.csv");
+    std::cout << "df.shape=" << df.shape() << std::endl;
+    const char *non_zero[] = {"Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"};
+    for (const auto &column: non_zero) {
+        df[column] = df[column].replace(0L, np::NaN);
+        auto mean = df[column].mean(true);
+        df[column] = df[column].replace(np::NaN, mean);
+    }
+
+    auto X = df.iloc(":", "0:8");
+    auto y = df.iloc(":", "8");
+
+    std::cout << "X=" << X << std::endl;
+    std::cout << "y=" << y << std::endl;
+    
     return 0;
 }
 ```

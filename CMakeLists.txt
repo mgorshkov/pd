@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13.0)
 
 set(PD pd)
 
-project(${PD} VERSION 0.0.2 DESCRIPTION "Pandas library methods on top of NP library" LANGUAGES CXX)
+project(${PD} VERSION 0.0.3 DESCRIPTION "Pandas library methods on top of NP library" LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
