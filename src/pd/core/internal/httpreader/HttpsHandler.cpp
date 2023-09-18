@@ -29,6 +29,7 @@ SOFTWARE.
 #include <pd/core/internal/httpreader/Connector.hpp>
 #include <pd/core/internal/httpreader/HttpsHandler.hpp>
 
+#ifdef OPENSSL
 namespace pd {
     namespace internal {
         namespace httpreader {
@@ -70,3 +71,4 @@ namespace pd {
         }// namespace httpreader
     }    // namespace internal
 }// namespace pd
+#endif

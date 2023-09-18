@@ -42,131 +42,50 @@ namespace pd {
                         const std::vector<internal::Value> &index = std::vector<internal::Value>{},
                         const internal::Value &name = internal::Value{});
 
-        explicit Series(const np::Array<np::bool_> &data,
+        template<typename DType, typename Derived, typename Storage>
+        explicit Series(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &data,
                         const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+                        const internal::Value &name = internal::Value{})
+            : Series{internal::Array{data.copy()}, index, name} {
+        }
 
-        explicit Series(np::Array<np::bool_> &&data,
+        template<typename DType, typename Derived, typename Storage>
+        explicit Series(np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &&data,
                         const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+                        const internal::Value &name = internal::Value{})
+            : Series{internal::Array{data.copy()}, index, name} {
+        }
 
-        explicit Series(const np::Array<np::intc> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+        Series(const internal::Array &data, const std::vector<internal::Value> &index)
+            : Series{data, index, internal::Value{}} {
+        }
 
-        explicit Series(np::Array<np::intc> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+        template<typename DType, typename Derived, typename Storage>
+        Series(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &data, const std::vector<internal::Value> &index)
+            : Series{data, index, internal::Value{}} {
+        }
 
-        explicit Series(const np::Array<np::int_> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+        template<typename DType, typename Derived, typename Storage>
+        Series(np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &&data, const std::vector<internal::Value> &index)
+            : Series{data, index, internal::Value{}} {
+        }
 
-        explicit Series(np::Array<np::int_> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+        Series(const internal::Array &data, const internal::Value &name)
+            : Series{data, std::vector<internal::Value>{}, name} {
+        }
 
-        explicit Series(const np::Array<np::Size> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+        Series(internal::Array &&data, const internal::Value &name)
+            : Series{data, std::vector<internal::Value>{}, name} {
+        }
 
-        explicit Series(np::Array<np::Size> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
+        template<typename DType, typename Derived, typename Storage>
+        Series(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &data, const internal::Value &name)
+            : Series{data, std::vector<internal::Value>{}, name} {
+        }
 
-        explicit Series(const np::Array<np::float_> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(np::Array<np::float_> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(const np::Array<np::string_> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(np::Array<np::string_> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(const np::Array<np::unicode_> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(np::Array<np::unicode_> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(const np::Array<internal::Value> &data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        explicit Series(np::Array<internal::Value> &&data,
-                        const std::vector<internal::Value> &index = std::vector<internal::Value>{},
-                        const internal::Value &name = internal::Value{});
-
-        Series(const internal::Array &data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::bool_> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::bool_> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::intc> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::intc> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::int_> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::int_> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::Size> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::Size> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::float_> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::float_> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::string_> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::string_> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<np::unicode_> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<np::unicode_> &&data, const std::vector<internal::Value> &index);
-
-        Series(const np::Array<internal::Value> &data, const std::vector<internal::Value> &index);
-        Series(np::Array<internal::Value> &&data, const std::vector<internal::Value> &index);
-
-        Series(const internal::Array &data, const internal::Value &name);
-        Series(internal::Array &&data, const internal::Value &name);
-
-        Series(const np::Array<np::bool_> &data, const internal::Value &name);
-        Series(np::Array<np::bool_> &&data, const internal::Value &name);
-
-        Series(const np::Array<np::intc> &data, const internal::Value &name);
-        Series(np::Array<np::intc> &&data, const internal::Value &name);
-
-        Series(const np::Array<np::int_> &data, const internal::Value &name);
-        Series(np::Array<np::int_> &&data, const internal::Value &name);
-
-        Series(const np::Array<np::Size> &data, const internal::Value &name);
-        Series(np::Array<np::Size> &&data, const internal::Value &name);
-
-        Series(const np::Array<np::float_> &data, const internal::Value &name);
-        Series(np::Array<np::float_> &&data, const internal::Value &name);
-
-        Series(const np::Array<np::string_> &data, const internal::Value &name);
-        Series(np::Array<np::string_> &&data, const internal::Value &name);
-
-        Series(const np::Array<np::unicode_> &data, const internal::Value &name);
-        Series(np::Array<np::unicode_> &&data, const internal::Value &name);
-
-        Series(const np::Array<internal::Value> &data, const internal::Value &name);
-        Series(np::Array<internal::Value> &&data, const internal::Value &name);
-
-        template<typename DType, typename Derived, typename ParentStorage, typename Parent>
-        Series(const np::ndarray::internal::IndexParent<DType, Derived, ParentStorage, Parent> &data, const internal::Value &columnName)
-            : m_name{columnName}, m_shape{data.shape()}, m_size{data.shape().calcSizeByShape()} {
-            np::Array<DType> array{m_shape};
-            for (np::Size i = 0; i < data.size(); ++i) {
-                array.set(i, data.get(i));
-            }
-            m_data = std::move(array);
+        template<typename DType, typename Derived, typename Storage>
+        Series(np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &&data, const internal::Value &name)
+            : Series{data, std::vector<internal::Value>{}, name} {
         }
 
         Series(const np::Shape &shape, const internal::Value &columnName)
@@ -217,7 +136,7 @@ namespace pd {
                 throw std::runtime_error("Different names");
             }
             Series result{series1.m_shape, series1.m_name};
-            for (size_t i = 0; i < series1.size(); ++i) {
+            for (np::Size i = 0; i < series1.size(); ++i) {
                 result.set(i, series1.at(i) + series2.at(i));
             }
             return result;
@@ -231,7 +150,7 @@ namespace pd {
                 throw std::runtime_error("Different names");
             }
             Series result{series1.m_shape, series1.m_name};
-            for (size_t i = 0; i < series1.size(); ++i) {
+            for (np::Size i = 0; i < series1.size(); ++i) {
                 result.set(i, series1.at(i) - series2.at(i));
             }
             return result;
@@ -245,7 +164,7 @@ namespace pd {
                 throw std::runtime_error("Different names");
             }
             Series result{series1.m_shape, series1.m_name};
-            for (size_t i = 0; i < series1.size(); ++i) {
+            for (np::Size i = 0; i < series1.size(); ++i) {
                 result.set(i, series1.at(i) * series2.at(i));
             }
             return result;
@@ -259,7 +178,7 @@ namespace pd {
                 throw std::runtime_error("Different names");
             }
             Series result{series1.m_shape, series1.m_name};
-            for (size_t i = 0; i < series1.size(); ++i) {
+            for (np::Size i = 0; i < series1.size(); ++i) {
                 result.set(i, series1.at(i) / series2.at(i));
             }
             return result;

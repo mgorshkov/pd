@@ -272,7 +272,11 @@ namespace pd {
         if (uri.m_scheme == Scheme::kHttp) {
             readWeb<Initializer, HttpHandler>(uri, &context);
         } else if (uri.m_scheme == Scheme::kHttps) {
+#ifdef OPENSSL
             readWeb<SslInitializer, HttpsHandler>(uri, &context);
+#else
+            throw std::runtime_error("SSL support is not enabled");
+#endif
         } else if (uri.m_scheme == Scheme::kFtp) {
             readFtp(uri, &context);
         } else {

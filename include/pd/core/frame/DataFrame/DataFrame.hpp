@@ -35,98 +35,10 @@ namespace pd {
     public:
         DataFrame();
 
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::bool_, SizeT> &data,
+        template<typename DType, typename Derived, typename Storage>
+        explicit DataFrame(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &data,
                            const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::bool_, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::bool_> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::bool_>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::intc, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::intc, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::intc> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::intc>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::int_, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::int_, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::int_> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::int_>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::Size, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::Size, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::Size> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::Size>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::float_, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::float_, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::float_> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::float_>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::string_, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::string_, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::string_> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::string_>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<np::unicode_, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::unicode_, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<np::unicode_> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<np::unicode_>(data, dataFrameParameters);
-        }
-
-        template<np::Size SizeT>
-        explicit DataFrame(const np::ndarray::array_static::NDArrayStatic<internal::Value, SizeT> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<internal::Value, SizeT>(data, dataFrameParameters);
-        }
-
-        explicit DataFrame(const np::ndarray::array_dynamic::NDArrayDynamic<internal::Value> &data,
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init<internal::Value>(data, dataFrameParameters);
-        }
-
-        template<np::Size NRows, np::Size NColumns>
-        explicit DataFrame(internal::Value data[NRows][NColumns],
-                           const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
-            init(data, dataFrameParameters);
+            init<DType, Derived, Storage>(data, dataFrameParameters);
         }
 
         DataFrame(const DataFrame &) = default;
@@ -167,8 +79,8 @@ namespace pd {
 
         [[nodiscard]] internal::Value dot(const DataFrame &another) const;
 
-        template<typename DType>
-        DataFrame addVector(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame addVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
                 throw std::runtime_error("Array must be 1D");
             }
@@ -186,8 +98,8 @@ namespace pd {
             return result;
         }
 
-        template<typename DType>
-        DataFrame operator+(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame operator+(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             return addVector(array);
         }
 
@@ -197,8 +109,8 @@ namespace pd {
             return add(dataFrame);
         }
 
-        template<typename DType>
-        DataFrame subtractVector(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame subtractVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
                 throw std::runtime_error("Array must be 1D");
             }
@@ -216,8 +128,8 @@ namespace pd {
             return result;
         }
 
-        template<typename DType>
-        DataFrame operator-(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame operator-(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             return subtractVector(array);
         }
 
@@ -227,8 +139,8 @@ namespace pd {
             return subtract(dataFrame);
         }
 
-        template<typename DType>
-        DataFrame multiplyVector(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame multiplyVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
                 throw std::runtime_error("Array must be 1D");
             }
@@ -246,8 +158,8 @@ namespace pd {
             return result;
         }
 
-        template<typename DType>
-        DataFrame operator*(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame operator*(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             return multiplyVector(array);
         }
 
@@ -257,8 +169,8 @@ namespace pd {
             return multiply(dataFrame);
         }
 
-        template<typename DType>
-        DataFrame divideVector(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame divideVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
                 throw std::runtime_error("Array must be 1D");
             }
@@ -276,8 +188,8 @@ namespace pd {
             return result;
         }
 
-        template<typename DType>
-        DataFrame operator/(const np::Array<DType> &array) const {
+        template<typename DType, typename Derived, typename Storage>
+        DataFrame operator/(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             return divideVector(array);
         }
 
@@ -288,15 +200,15 @@ namespace pd {
         }
 
     private:
-        template<typename DType, np::Size SizeT = np::SIZE_DEFAULT>
-        void init(const np::Array<DType, SizeT> &data, const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
+        template<typename DType, typename Derived, typename Storage>
+        void init(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &data, const DataFrameParameters &dataFrameParameters = DataFrameParameters{}) {
             m_index = internal::Index{dataFrameParameters.index, data.shape()[0]};
             m_shape = data.shape();
 
             if (m_shape.size() == 1) {
                 m_columns = internal::Index{dataFrameParameters.columns, 1};
                 auto column = m_columns[0];
-                np::Array<DType> array = data.copy();
+                auto array = data.copy();
                 m_columnData[column] = Series{array, column};
             } else {
                 m_columns = internal::Index{dataFrameParameters.columns, data.shape()[1]};
@@ -308,22 +220,6 @@ namespace pd {
                     }
                     m_columnData[column] = Series{array, column};
                 }
-            }
-        }
-
-        template<np::Size NRows, np::Size NColumns>
-        void init(internal::Value data[NRows][NColumns], const DataFrameParameters &dataFrameParameters) {
-            m_index = internal::Index{dataFrameParameters.index, NRows};
-            m_columns = internal::Index{dataFrameParameters.columns, NColumns};
-            m_shape = np::Shape{NRows, NColumns};
-
-            for (np::Size i = 0; i < NColumns; ++i) {
-                auto column = m_columns[i];
-                np::Array<internal::Value> array{np::Shape{NRows}};
-                for (np::Size j = 0; j < NRows; ++j) {
-                    array.set(j, data[i][j]);
-                }
-                m_columnData[column] = Series{array, column};
             }
         }
 

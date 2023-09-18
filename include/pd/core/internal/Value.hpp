@@ -658,7 +658,7 @@ namespace pd {
                 return false;
             }
 
-            bool operator==(const np::string_ &another) {
+            bool operator==(const np::string_ &another) const {
                 if (isString()) {
                     return *static_cast<const np::string_ *>(*this) == another;
                 }

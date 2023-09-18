@@ -10,11 +10,17 @@ add_executable(${READ_CSV})
 
 target_sources(${READ_CSV} PUBLIC main.cpp)
 
+set (LIBS pd
+    ${PTHREAD})
+
+if (OPENSSL)
+    set (LIBS ${LIBS} ssl)
+endif ()
+
 target_link_libraries(
     ${READ_CSV}
-    ${PTHREAD}
-    pd
-    ssl)
+    ${LIBS}
+)
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/${READ_CSV}

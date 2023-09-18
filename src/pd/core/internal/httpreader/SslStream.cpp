@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifdef OPENSSL
+
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
@@ -108,3 +110,5 @@ namespace pd {
         }// namespace httpreader
     }    // namespace internal
 }// namespace pd
+
+#endif

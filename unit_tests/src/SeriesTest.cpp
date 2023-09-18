@@ -43,7 +43,7 @@ TEST_F(SeriesTest, constructTest) {
     EXPECT_EQ(glucose.shape(), np::Shape{7});
     EXPECT_EQ(glucose.size(), 7);
     EXPECT_EQ(glucose.dtype(), "float64");
-    EXPECT_EQ(glucose.name(), "Glucose");
+    EXPECT_EQ(static_cast<std::string>(glucose.name()), "Glucose");
 }
 
 TEST_F(SeriesTest, outputTest) {

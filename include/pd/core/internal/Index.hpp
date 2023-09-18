@@ -68,12 +68,12 @@ namespace pd {
                 return true;
             }
 
-            [[nodiscard]] np::Size empty() const {
+            [[nodiscard]] bool empty() const {
                 return m_namedIndex.empty() && m_count == 0;
             }
 
             [[nodiscard]] np::Size size() const {
-                return m_namedIndex.empty() ? m_count : m_namedIndex.size();
+                return m_namedIndex.empty() ? m_count : static_cast<np::Size>(m_namedIndex.size());
             }
 
             internal::Value operator[](np::Size offset) const {
@@ -100,14 +100,14 @@ namespace pd {
 
             void addIndex(const Index &index) {
                 for (np::Size i = 0; i < index.size(); ++i) {
-                    m_nameToOffset[index[i]] = m_namedIndex.size() + i;
+                    m_nameToOffset[index[i]] = static_cast<np::Size>(m_namedIndex.size()) + i;
                 }
                 std::copy(index.m_namedIndex.begin(), index.m_namedIndex.end(), std::back_inserter(m_namedIndex));
                 m_count += index.m_count;
             }
 
             void addIndex(const internal::Value &value) {
-                m_nameToOffset[value] = m_namedIndex.size();
+                m_nameToOffset[value] = static_cast<np::Size>(m_namedIndex.size());
                 m_namedIndex.push_back(value);
             }
 

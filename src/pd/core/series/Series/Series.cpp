@@ -24,7 +24,10 @@ SOFTWARE.
 #include <pd/core/series/Series/Series.hpp>
 
 namespace pd {
-    Series::Series(const internal::Array &data, const std::vector<internal::Value> &index, const internal::Value &name)
+
+    Series::Series(const internal::Array &data,
+                   const std::vector<internal::Value> &index,
+                   const internal::Value &name)
         : m_data{data}, m_index{index, data.size()}, m_name{name} {
         np::Shape shape = m_data.shape();
         if (shape.size() != 1) {
@@ -37,7 +40,9 @@ namespace pd {
         }
     }
 
-    Series::Series(internal::Array &&data, const std::vector<internal::Value> &index, const internal::Value &name)
+    Series::Series(internal::Array &&data,
+                   const std::vector<internal::Value> &index,
+                   const internal::Value &name)
         : m_data{std::move(data)}, m_index{index, data.size()}, m_name{name} {
         np::Shape shape = m_data.shape();
         if (shape.size() != 1) {
@@ -48,210 +53,6 @@ namespace pd {
         if (!m_index.empty() && m_index.size() != m_size) {
             throw std::runtime_error("Index has an invalid size");
         }
-    }
-
-    Series::Series(const np::Array<np::bool_> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::bool_> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<np::intc> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::intc> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<np::int_> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::int_> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<np::Size> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::Size> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<np::float_> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::float_> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<np::string_> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::string_> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<np::unicode_> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<np::unicode_> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const np::Array<internal::Value> &data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(np::Array<internal::Value> &&data, const std::vector<internal::Value> &index, const internal::Value &name)
-        : Series{internal::Array{data}, index, name} {
-    }
-
-    Series::Series(const internal::Array &data, const std::vector<internal::Value> &index)
-        : Series{data, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::bool_> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::bool_> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::intc> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::intc> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::int_> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::int_> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::Size> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::Size> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::float_> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::float_> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::string_> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::string_> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<np::unicode_> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<np::unicode_> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const np::Array<internal::Value> &data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(np::Array<internal::Value> &&data, const std::vector<internal::Value> &index)
-        : Series{internal::Array{data}, index, internal::Value{}} {
-    }
-
-    Series::Series(const internal::Array &data, const internal::Value &name)
-        : Series{data, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(internal::Array &&data, const internal::Value &name)
-        : Series{std::move(data), std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::bool_> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::bool_> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::intc> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::intc> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::int_> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::int_> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::Size> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::Size> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::float_> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::float_> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::string_> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::string_> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<np::unicode_> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<np::unicode_> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(const np::Array<internal::Value> &data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
-    }
-
-    Series::Series(np::Array<internal::Value> &&data, const internal::Value &name)
-        : Series{internal::Array{data}, std::vector<internal::Value>{}, name} {
     }
 
     bool Series::operator==(const Series &other) const {
@@ -274,7 +75,7 @@ namespace pd {
     }
 
     np::Size Series::ndim() const {
-        return m_shape.size();
+        return static_cast<np::Size>(m_shape.size());
     }
 
     np::Size Series::size() const {

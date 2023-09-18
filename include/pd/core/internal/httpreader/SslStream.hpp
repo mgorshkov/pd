@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#ifdef OPENSSL
 #include <memory>
 #include <openssl/ssl.h>
 
@@ -56,3 +57,4 @@ namespace pd {
         }// namespace httpreader
     }    // namespace internal
 }// namespace pd
+#endif

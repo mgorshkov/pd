@@ -330,13 +330,13 @@ namespace pd {
                 if (const auto *arrayFloatPtr = std::get_if<np::Array<np::float_>>(&m_array)) {
                     if (another.isValueArray()) {
                         auto array = std::get<np::Array<internal::Value>>(another.m_array);
-                        return np::array_equal(array, *arrayFloatPtr);
+                        return np::array_equal(array, *arrayFloatPtr, true);
                     }
                     if (!another.isFloatArray()) {
                         return false;
                     }
                     auto array = std::get<np::Array<np::float_>>(another.m_array);
-                    return np::array_equal(array, *arrayFloatPtr);
+                    return np::array_equal(array, *arrayFloatPtr, true);
                 }
                 if (const auto *arrayStringPtr = std::get_if<np::Array<np::string_>>(&m_array)) {
                     if (another.isValueArray()) {
@@ -375,7 +375,7 @@ namespace pd {
                     }
                     if (another.isFloatArray()) {
                         auto array = std::get<np::Array<np::float_>>(another.m_array);
-                        return np::array_equal(array, *arrayValuePtr);
+                        return np::array_equal(array, *arrayValuePtr, true);
                     }
                     if (another.isStringArray()) {
                         auto array = std::get<np::Array<np::string_>>(another.m_array);
