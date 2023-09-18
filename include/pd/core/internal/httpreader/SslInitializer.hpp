@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#ifdef OPENSSL
 #include <pd/core/internal/httpreader/Initializer.hpp>
 
 namespace pd {
@@ -36,3 +37,4 @@ namespace pd {
         }// namespace httpreader
     }    // namespace internal
 }// namespace pd
+#endif

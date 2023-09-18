@@ -1,3 +1,7 @@
+# Release 0.0.4
+## Changes
+* Code simplified
+
 # Release 0.0.3
 ## Changes
 * DataFrame drop method added

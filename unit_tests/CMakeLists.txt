@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13.0)
 
 set(PD_UNIT_TESTS pd_unit_tests)
 
-project(${PD_UNIT_TESTS} VERSION 0.0.3 DESCRIPTION "Pd Unit Tests")
+project(${PD_UNIT_TESTS} VERSION 0.0.4 DESCRIPTION "Pd Unit Tests")
 
 add_definitions(-DTEST_DATA_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/test_data")
 
@@ -29,12 +29,16 @@ target_sources(${PD_UNIT_TESTS} PUBLIC ${SOURCES})
 
 add_test(NAME ${PD_UNIT_TESTS} COMMAND tests)
 
-target_link_libraries(
-    ${PD_UNIT_TESTS}
+set (LIBS
     pd
     gtest
-    ssl
     ${PTHREAD})
+
+if (OPENSSL)
+    set (LIBS ${LIBS} ssl)
+endif ()
+
+target_link_libraries(${PD_UNIT_TESTS} ${LIBS})
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/${PD_UNIT_TESTS}

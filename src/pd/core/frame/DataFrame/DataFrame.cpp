@@ -37,7 +37,7 @@ namespace pd {
     }
 
     np::Size DataFrame::ndim() const {
-        return m_shape.size();
+        return static_cast<np::Size>(m_shape.size());
     }
 
     np::Shape DataFrame::shape() const {

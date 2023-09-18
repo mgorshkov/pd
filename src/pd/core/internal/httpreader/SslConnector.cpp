@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifdef OPENSSL
+
 #include <pd/core/internal/httpreader/Connector.hpp>
 #include <pd/core/internal/httpreader/SslConnector.hpp>
 
@@ -33,3 +35,5 @@ namespace pd {
         }// namespace httpreader
     }    // namespace internal
 }// namespace pd
+
+#endif
