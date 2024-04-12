@@ -315,7 +315,7 @@ namespace pd {
     }
 
     Series Series::iloc(const std::string &cond) const {
-        static constexpr std::size_t kIndexingHandlersSize{static_cast<std::size_t>(np::ndarray::internal::IndexingMode::Size)};
+        static constexpr std::size_t kIndexingHandlersSize = 2;
 
         const internal::IndexingHandler<internal::IndexingChecker1, internal::IndexingWorker1<Series>> indexingHandlers[kIndexingHandlersSize] = {
                 {internal::IndexingMode::Slicing,
@@ -395,13 +395,13 @@ namespace pd {
         for (np::Size i = 0; i < s; ++i) {
             const auto &element = array.get(i);
             if (element.isInt()) {
-                np::ndarray::internal::inc(result, static_cast<np::int_>(element));
+                result += static_cast<np::int_>(element);
             } else if (element.isIntC()) {
-                np::ndarray::internal::inc(result, static_cast<np::intc>(element));
+                result += static_cast<np::intc>(element);
             } else if (element.isFloat()) {
-                np::ndarray::internal::inc(result, static_cast<np::float_>(element));
+                result += static_cast<np::float_>(element);
             } else if (element.isSize()) {
-                np::ndarray::internal::inc(result, static_cast<np::Size>(element));
+                result += static_cast<np::Size>(element);
             } else {
                 continue;
             }
@@ -424,13 +424,13 @@ namespace pd {
             if (isNaNResult)
                 continue;
             if (element.isInt()) {
-                np::ndarray::internal::inc(result, static_cast<np::int_>(element));
+                np::ndarray::internal::add(result, static_cast<np::int_>(element));
             } else if (element.isIntC()) {
-                np::ndarray::internal::inc(result, static_cast<np::intc>(element));
+                np::ndarray::internal::add(result, static_cast<np::intc>(element));
             } else if (element.isFloat()) {
-                np::ndarray::internal::inc(result, static_cast<np::float_>(element));
+                np::ndarray::internal::add(result, static_cast<np::float_>(element));
             } else if (element.isSize()) {
-                np::ndarray::internal::inc(result, static_cast<np::Size>(element));
+                np::ndarray::internal::add(result, static_cast<np::Size>(element));
             } else {
                 continue;
             }

@@ -1,3 +1,7 @@
+# Release 0.0.5
+## Changes
+* Adapted for new np version
+
 # Release 0.0.4
 ## Changes
 * Code simplified

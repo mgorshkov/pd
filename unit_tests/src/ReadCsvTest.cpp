@@ -95,7 +95,7 @@ TEST_F(ReadCsvTest, readFromLocalFileNoHeader) {
 }
 
 TEST_F(ReadCsvTest, readFromRemoteFile) {
-    auto df = read_csv("https://raw.githubusercontent.com/adityakumar529/Coursera_Capstone/master/diabetes.csv");
+    auto df = read_csv("https://raw.githubusercontent.com/plotly/datasets/master/diabetes.csv");
     internal::Value columnNames[] = {"Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age", "Outcome"};
     checkDataFrame(df, columnNames);
 }
