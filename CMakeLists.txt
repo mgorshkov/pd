@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.18.0)
 
+# Project name
 set(PD pd)
 
-project(${PD} VERSION 0.0.4 DESCRIPTION "Pandas library methods on top of NP library" LANGUAGES CXX)
+# Set up project
+project(${PD} VERSION 0.0.6 DESCRIPTION "Pandas library methods on top of NP library" LANGUAGES CXX)
 
+# C++ 20
 set(CMAKE_CXX_STANDARD 20)
 
+# Default build type is Release
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -144,10 +148,8 @@ set(MAKE_DOC OFF)
 # Make unit tests and sample if it's the main project
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(MAKE_UNIT_TESTS ON)
-    set(MAKE_SAMPLE ON)
 else()
     set(MAKE_UNIT_TESTS OFF)
-    set(MAKE_SAMPLE OFF)
 endif()
 
 if (MAKE_UNIT_TESTS)
@@ -160,11 +162,6 @@ endif()
 if (MAKE_DOC)
     message(STATUS "Enable doxygen in ${PD}")
     add_subdirectory(doc)
-endif()
-
-if (MAKE_SAMPLE)
-    message(STATUS "Enable samples build in ${PD}")
-    add_subdirectory(samples/read_csv)
 endif()
 
 install(

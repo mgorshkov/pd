@@ -1,7 +1,7 @@
 /*
 Pandas library methods on top of NP library
 
-Copyright (c) 2023 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
+Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <cstdint>
 #include <ctype.h>
 
 #include <pd/core/internal/base64/Base64.hpp>
@@ -110,5 +111,5 @@ namespace pd {
                 return output;
             }
         }// namespace base64
-    }    // namespace internal
+    }// namespace internal
 }// namespace pd

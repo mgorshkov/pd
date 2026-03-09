@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.18.0)
 
 set(PD_UNIT_TESTS pd_unit_tests)
 
@@ -32,6 +32,7 @@ add_test(NAME ${PD_UNIT_TESTS} COMMAND tests)
 set (LIBS
     pd
     gtest
+    fmt
     ${PTHREAD})
 
 set(OPENSSL ON)
