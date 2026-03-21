@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -25,6 +25,7 @@ SOFTWARE.
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/httpreader/Error.hpp>
 #include <pd/core/internal/httpreader/SslStream.hpp>
 
@@ -37,21 +38,21 @@ namespace pd {
                 const SSL_METHOD *method = TLS_client_method();
                 m_ctx = SSL_CTX_new(method);
                 if (m_ctx == nullptr) {
-                    throw std::runtime_error("Can't create SSL context");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Can't create SSL context");
                 }
                 m_ssl = SSL_new(m_ctx);
                 if (m_ssl == nullptr) {
-                    throw std::runtime_error("Can't create SSL");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Can't create SSL");
                 }
                 const char *const PREFERED_CIPHERS = "HIGH:!aNULL:!kRSA:!PSK:!SRP:!MD5:!RC4";
                 if (SSL_set_cipher_list(m_ssl, PREFERED_CIPHERS) != 1) {
-                    throw std::runtime_error("Cannot set cipher list");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot set cipher list");
                 }
             }
 
             void SslStream::setHost(const std::string &host) {
                 if (SSL_set_tlsext_host_name(m_ssl, host.c_str()) != 1) {
-                    throw std::runtime_error("Cannot set tlsext host name");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot set tlsext host name");
                 }
             }
 
@@ -62,7 +63,7 @@ namespace pd {
                 int sock = getSocket().socket();
 #endif
                 if (SSL_set_fd(m_ssl, sock) == 0) {
-                    throw std::runtime_error("Error setting fd");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Error setting fd");
                 }
                 int connectStatus = SSL_connect(m_ssl);
                 int err = SSL_get_error(m_ssl, connectStatus);
@@ -71,17 +72,17 @@ namespace pd {
                         //No error, do nothing
                         break;
                     case SSL_ERROR_ZERO_RETURN:
-                        throw std::runtime_error("Peer has closed connection");
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Peer has closed connection");
 
                     case SSL_ERROR_SSL: {
                         shutdown();
                         std::string errStr = "Error in SSL library: ";
-                        throw std::runtime_error(errStr + ERR_error_string(SSL_ERROR_SSL, nullptr));
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, errStr + ERR_error_string(SSL_ERROR_SSL, nullptr));
                     }
 
                     default: {
                         std::string errStr = "Unknown error: ";
-                        throw std::runtime_error(errStr + ERR_error_string(err, nullptr));
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, errStr + ERR_error_string(err, nullptr));
                     }
                 }
             }
@@ -95,7 +96,7 @@ namespace pd {
             std::size_t SslStream::read(void *buffer, std::size_t count) const {
                 int readSize = SSL_read(m_ssl, buffer, static_cast<int>(count));
                 if (readSize < 0) {
-                    throw std::runtime_error("Error receiving message");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Error receiving message");
                 }
                 return readSize;
             }
@@ -103,7 +104,7 @@ namespace pd {
             std::size_t SslStream::write(const void *buffer, std::size_t count) const {
                 int writeSize = SSL_write(m_ssl, buffer, static_cast<int>(count));
                 if (writeSize < 0) {
-                    throw std::runtime_error("Error sending SSL message");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Error sending SSL message");
                 }
                 return writeSize;
             }

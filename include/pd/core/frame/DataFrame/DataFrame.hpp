@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -25,6 +25,7 @@ SOFTWARE.
 #include <string>
 #include <unordered_map>
 
+#include <pd/Exception.hpp>
 #include <pd/core/frame/DataFrame/DataFrameParameters.hpp>
 #include <pd/core/internal/Index.hpp>
 #include <pd/core/internal/Indexing.hpp>
@@ -82,7 +83,7 @@ namespace pd {
         template<typename DType, typename Derived, typename Storage>
         DataFrame addVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
-                throw std::runtime_error("Array must be 1D");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Array must be 1D");
             }
             auto newShape = shape().broadcast(array.shape());
             DataFrame result;
@@ -112,7 +113,7 @@ namespace pd {
         template<typename DType, typename Derived, typename Storage>
         DataFrame subtractVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
-                throw std::runtime_error("Array must be 1D");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Array must be 1D");
             }
             auto newShape = shape().broadcast(array.shape());
             DataFrame result;
@@ -142,7 +143,7 @@ namespace pd {
         template<typename DType, typename Derived, typename Storage>
         DataFrame multiplyVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
-                throw std::runtime_error("Array must be 1D");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Array must be 1D");
             }
             auto newShape = shape().broadcast(array.shape());
             DataFrame result;
@@ -172,7 +173,7 @@ namespace pd {
         template<typename DType, typename Derived, typename Storage>
         DataFrame divideVector(const np::ndarray::internal::NDArrayBase<DType, Derived, Storage> &array) const {
             if (array.ndim() != 1) {
-                throw std::runtime_error("Array must be 1D");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Array must be 1D");
             }
             auto newShape = shape().broadcast(array.shape());
             DataFrame result;

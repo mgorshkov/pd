@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -23,6 +23,7 @@ SOFTWARE.
 #pragma once
 
 #include <ostream>
+#include <pd/Exception.hpp>
 #include <string>
 
 namespace pd {
@@ -42,13 +43,13 @@ namespace pd {
                 explicit HttpVersion(const std::string &version) {
                     auto pos = version.find(kProtocolDelimiter);
                     if (pos == std::string::npos) {
-                        throw std::runtime_error("Invalid version format");
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid version format");
                     }
                     m_protocol = version.substr(0, pos);
                     auto rest = version.substr(pos + 1);
                     auto versionDelimPos = rest.find(kVersionDelimiter);
                     if (versionDelimPos == std::string::npos) {
-                        throw std::runtime_error("Invalid version format");
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid version format");
                     }
                     m_major = std::stoi(rest.substr(0, versionDelimPos));
                     m_minor = std::stoi(rest.substr(versionDelimPos + 1));

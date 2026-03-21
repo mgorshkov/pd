@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <pd/Exception.hpp>
 #include <pd/core/frame/DataFrame/DataFrame.hpp>
 #include <pd/core/internal/Indexing.hpp>
 
@@ -54,7 +55,7 @@ namespace pd {
 
     void DataFrame::append(const DataFrame &df) {
         if (!empty() && m_shape[0] != df.shape()[0]) {
-            throw std::runtime_error("Added dataframe has different number of rows from existing dataframe");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Added dataframe has different number of rows from existing dataframe");
         }
 
         if (empty()) {
@@ -74,7 +75,7 @@ namespace pd {
 
     void DataFrame::append(const Series &series) {
         if (!empty() && m_shape[0] != series.shape()[0]) {
-            throw std::runtime_error("Added series has different number of rows from existing dataframe");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Added series has different number of rows from existing dataframe");
         }
 
         if (empty()) {
@@ -145,7 +146,7 @@ namespace pd {
                 array.set(0, *static_cast<const np::unicode_ *>(value));
                 dataFrame.append(Series{array, columnName});
             } else {
-                throw std::runtime_error("Unknown type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown type");
             }
         }
         return dataFrame;
@@ -165,7 +166,7 @@ namespace pd {
         if (colonPos == std::string::npos) {
             np::Size i = std::stoi(rows);
             if (i >= totalRows) {
-                throw std::runtime_error("Index " + std::to_string(i) + " out of bounds");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Index " + std::to_string(i) + " out of bounds");
             }
             return operator[](i);
         }
@@ -186,7 +187,7 @@ namespace pd {
         }
         np::Size length = lastIndex - firstIndex;
         if (length > totalRows) {
-            throw std::runtime_error("Incorrect range");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Incorrect range");
         }
 
         DataFrame dataFrame{};
@@ -242,7 +243,7 @@ namespace pd {
                 }
                 dataFrame.append(Series{array, columnName});
             } else {
-                throw std::runtime_error("Unknown type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown type");
             }
         }
         return dataFrame;
@@ -255,7 +256,7 @@ namespace pd {
         if (colonPos == std::string::npos) {
             np::Size i = std::stoi(rows);
             if (i >= totalRows) {
-                throw std::runtime_error("Index " + std::to_string(i) + " out of bounds");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Index " + std::to_string(i) + " out of bounds");
             }
             DataFrame dataFrame{};
             std::vector<internal::Value> columnIndex;
@@ -319,7 +320,7 @@ namespace pd {
                     array.set(0, *static_cast<const np::unicode_ *>(value));
                     dataFrame.append(Series{array, columnName});
                 } else {
-                    throw std::runtime_error("Unknown type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown type");
                 }
             }
             return dataFrame;
@@ -341,7 +342,7 @@ namespace pd {
         }
         np::Size length = rowsLastIndex - rowsFirstIndex;
         if (length > totalRows) {
-            throw std::runtime_error("Incorrect range");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Incorrect range");
         }
 
         std::vector<internal::Value> columnIndex;
@@ -445,7 +446,7 @@ namespace pd {
                 }
                 dataFrame.append(Series{array, columnName});
             } else {
-                throw std::runtime_error("Unknown type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown type");
             }
         }
         return dataFrame;
@@ -461,7 +462,7 @@ namespace pd {
 
     Series DataFrame::iloc(np::Size row) const {
         if (empty()) {
-            throw std::runtime_error("DataFrame is empty, cannot do iloc");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame is empty, cannot do iloc");
         }
 
         std::string dtype;
@@ -539,7 +540,7 @@ namespace pd {
                 }
                 return Series{array, internal::Value{std::to_string(row)}};
             }
-            throw std::runtime_error("Invalid value type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
         } else {
             dtype.clear();
             for (const auto &column: m_columns.getIndex()) {
@@ -662,20 +663,20 @@ namespace pd {
                 }
                 return Series{array, internal::Value{static_cast<np::int_>(row)}};
             }
-            throw std::runtime_error("Invalid value type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
         }
     }
 
     internal::Value DataFrame::iloc(np::Size row, np::Size column) const {
         if (empty()) {
-            throw std::runtime_error("DataFrame is empty, cannot do iloc");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame is empty, cannot do iloc");
         }
         return at(row, m_columns[column]);
     }
 
     DataFrame DataFrame::iloc(const std::string &rows) const {
         if (empty()) {
-            throw std::runtime_error("DataFrame is empty, cannot do iloc");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame is empty, cannot do iloc");
         }
         static constexpr std::size_t kIndexingHandlersSize{static_cast<std::size_t>(np::ndarray::internal::IndexingMode::Size)};
 
@@ -692,12 +693,12 @@ namespace pd {
                 return indexing.worker(rows);
             }
         }
-        throw std::runtime_error("Invalid operator[] argument");
+        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid operator[] argument");
     }
 
     DataFrame DataFrame::iloc(const std::string &rows, const std::string &columns) const {
         if (empty()) {
-            throw std::runtime_error("DataFrame is empty, cannot do iloc");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame is empty, cannot do iloc");
         }
         static constexpr std::size_t kIndexingHandlersSize{static_cast<std::size_t>(np::ndarray::internal::IndexingMode::Size)};
 
@@ -714,19 +715,19 @@ namespace pd {
                 return indexing.worker(rows, columns);
             }
         }
-        throw std::runtime_error("Invalid operator[] argument");
+        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid operator[] argument");
     }
 
     internal::Value DataFrame::dot(const DataFrame &another) const {
         if (shape().size() != 2 || another.shape().size() != 2 || shape()[0] != 1 || another.shape()[0] != 1 || shape()[1] != another.shape()[1]) {
-            throw std::runtime_error("Shapes are different or arguments are not 1D dataframes");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Shapes are different or arguments are not 1D dataframes");
         }
         std::string dtype;
         for (const auto &columnName: m_columns.getIndex()) {
             const auto &series1 = operator[](columnName);
             const auto &series2 = another[columnName];
             if ((!dtype.empty() && dtype != series1.dtype()) || series1.dtype() != series2.dtype()) {
-                throw std::runtime_error("Different column types");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different column types");
             }
             if (dtype.empty()) {
                 dtype = series1.dtype();
@@ -751,7 +752,7 @@ namespace pd {
 
     DataFrame DataFrame::add(const DataFrame &dataFrame) const {
         if (dataFrame.ndim() != 1) {
-            throw std::runtime_error("DataFrame must be 1D");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame must be 1D");
         }
         auto newShape = shape().broadcast(dataFrame.shape());
         DataFrame result;
@@ -775,7 +776,7 @@ namespace pd {
                 }
                 result.append(Series{columnArray, columnName});
             } else {
-                throw std::runtime_error("Unknown series type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown series type");
             }
             ++row;
         }
@@ -784,7 +785,7 @@ namespace pd {
 
     DataFrame DataFrame::subtract(const DataFrame &dataFrame) const {
         if (dataFrame.ndim() != 1) {
-            throw std::runtime_error("DataFrame must be 1D");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame must be 1D");
         }
         auto newShape = shape().broadcast(dataFrame.shape());
         DataFrame result;
@@ -808,7 +809,7 @@ namespace pd {
                 }
                 result.append(Series{columnArray, columnName});
             } else {
-                throw std::runtime_error("Unknown series type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown series type");
             }
             ++row;
         }
@@ -817,7 +818,7 @@ namespace pd {
 
     DataFrame DataFrame::multiply(const DataFrame &dataFrame) const {
         if (dataFrame.ndim() != 1) {
-            throw std::runtime_error("DataFrame must be 1D");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame must be 1D");
         }
         auto newShape = shape().broadcast(dataFrame.shape());
         DataFrame result;
@@ -841,7 +842,7 @@ namespace pd {
                 }
                 result.append(Series{columnArray, columnName});
             } else {
-                throw std::runtime_error("Unknown series type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown series type");
             }
             ++row;
         }
@@ -850,7 +851,7 @@ namespace pd {
 
     DataFrame DataFrame::divide(const DataFrame &dataFrame) const {
         if (dataFrame.ndim() != 1) {
-            throw std::runtime_error("DataFrame must be 1D");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "DataFrame must be 1D");
         }
         auto newShape = shape().broadcast(dataFrame.shape());
         DataFrame result;
@@ -874,7 +875,7 @@ namespace pd {
                 }
                 result.append(Series{columnArray, columnName});
             } else {
-                throw std::runtime_error("Unknown series type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown series type");
             }
             ++row;
         }

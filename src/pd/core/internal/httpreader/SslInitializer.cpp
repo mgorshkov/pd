@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -27,6 +27,7 @@ SOFTWARE.
 #include <openssl/ssl.h>
 #include <stdexcept>
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/httpreader/SslInitializer.hpp>
 
 namespace pd {
@@ -34,7 +35,7 @@ namespace pd {
         namespace httpreader {
             SslInitializer::SslInitializer() {
                 if (SSL_library_init() != 1) {
-                    throw std::runtime_error("Error initializing SSL library");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Error initializing SSL library");
                 }
                 SSL_load_error_strings();
                 ERR_load_crypto_strings();

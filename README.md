@@ -1,31 +1,25 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ik2dgnluc7qe89mw/branch/main?svg=true)](https://ci.appveyor.com/project/mgorshkov/pd/branch/main)
 
+![np logo](doc/logo.svg)
+
 # About
-Methods from pandas library on top of NP library.
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + SIMD (AVX2/AVX512/AMX) CPU CPU
 
 # Requirements
-Any C++20-compatible compiler:
-* gcc 8 or higher
-* clang 10 or higher
+C++20-compatible compiler:
+* gcc 13 or higher
+* clang 14 or higher
 * Visual Studio 2019 or higher
+* CUDA development environment (NVIDIA CUDA Toolkit, and compatible NVIDIA drivers installed) to use CUDA optimizations (nvcc 12 or higher)
 
 # Repo
 ```
 git clone https://github.com/mgorshkov/pd.git
 ```
 
-# Build unit tests and sample
-## Linux/MacOS
+# Build library and unit tests
 ```
-mkdir build && cd build
-cmake ..
-cmake --build .
-```
-## Windows
-```
-mkdir build && cd build
-cmake ..
-cmake --build . --config Release
+./scripts/build.sh
 ```
 
 # Build docs
@@ -64,7 +58,7 @@ int main(int, char **) {
 
     std::cout << "X=" << X << std::endl;
     std::cout << "y=" << y << std::endl;
-    
+
     return 0;
 }
 ```
@@ -74,19 +68,23 @@ int main(int, char **) {
 ```
 git clone https://github.com/mgorshkov/pd.git
 ```
-2. cd samples/read_csv
+2. Build the library
+```
+./scripts/build.sh
+```
+3. cd samples/read_csv
 ```
 cd samples/read_csv
 ```
-3. Make build dir
+4. Make build dir
 ```
-mkdir -p build-release && cd build-release
+mkdir -p build && cd build
 ```
-4. Configure cmake
+5. Configure cmake
 ```
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
-5. Build
+6. Build
 ## Linux/MacOS
 ```
 cmake --build .
@@ -102,6 +100,6 @@ $./read_csv
 ```
 
 # Links
-* C++ numpy-like template-based array implementation: https://github.com/mgorshkov/np
-* Scientific methods on top of NP library: https://github.com/mgorshkov/scipy
-* ML Methods from scikit-learn library: https://github.com/mgorshkov/sklearn
+* ⚡ NumPy-style arrays in C++ | CUDA GPU + SIMD (AVX2/AVX512/AMX) CPU CPU: https://github.com/mgorshkov/np
+* ⚡ SciPy methods in C++ | CUDA GPU + SIMD (AVX2/AVX512/AMX) CPU CPU: https://github.com/mgorshkov/scipy
+* ⚡ ML methods in C++ | CUDA GPU + SIMD (AVX2/AVX512/AMX) CPU CPU: https://github.com/mgorshkov/sklearn

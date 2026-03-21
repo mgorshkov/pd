@@ -1,55 +1,84 @@
 cmake_minimum_required(VERSION 3.18.0)
 
-set(READ_CSV read_csv)
+set(PROJECT_NAME read_csv)
 
-project(${READ_CSV})
+project(${PROJECT_NAME})
 
-# C++ 20
-set(CMAKE_CXX_STANDARD 20)
+# Tune up various optimizations
+# Enable CUDA support
+option(ENABLE_CUDA "Enable CUDA optimizations" ON)
+# Set up options for basic compile optimizations
+option(ENABLE_AVX2 "Enable AVX2 optimizations" ON)
+option(ENABLE_AVX512 "Enable AVX512 optimizations" OFF)
+option(ENABLE_AMX "Enable AMX (Advanced Matrix Extensions) optimizations" OFF)
+# Set up options for OpenMP support
+option(ENABLE_OPENMP "Enable OpenMP" ON)
 
 include(FetchContent)
+
+FetchContent_Declare(
+    cmake
+    GIT_REPOSITORY https://github.com/mgorshkov/cmake.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(cmake)
+
+# Apply global cmake options
+include(${cmake_SOURCE_DIR}/Config.cmake)
 
 FetchContent_Declare(
     np
     GIT_REPOSITORY https://github.com/mgorshkov/np.git
     GIT_TAG main
+    CMAKE_ARGS
+    -DENABLE_CUDA=${ENABLE_CUDA}
+    -DENABLE_OPENMP=${ENABLE_OPENMP}
+    -DENABLE_SSE2=${ENABLE_SSE2}
+    -DENABLE_SSE3=${ENABLE_SSE3}
+    -DENABLE_AVX=${ENABLE_AVX}
+    -DENABLE_AVX2=${ENABLE_AVX2}
+    -DENABLE_AVX512=${ENABLE_AVX512}
+    -DENABLE_AMX=${ENABLE_AMX}
+    -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+    -DDEBUG_INFO=${DEBUG_INFO}
 )
-
 FetchContent_MakeAvailable(np)
 
-find_library(PD_LIBRARY
-    NAMES pd libpd
-    PATHS
-        ../../build/src
-        /usr/local/lib
-        /usr/lib
-    NO_DEFAULT_PATH
+FetchContent_Declare(
+    pd
+    GIT_REPOSITORY https://github.com/mgorshkov/pd.git
+    GIT_TAG main
+    CMAKE_ARGS
+    -DENABLE_CUDA=${ENABLE_CUDA}
+    -DENABLE_OPENMP=${ENABLE_OPENMP}
+    -DENABLE_SSE2=${ENABLE_SSE2}
+    -DENABLE_SSE3=${ENABLE_SSE3}
+    -DENABLE_AVX=${ENABLE_AVX}
+    -DENABLE_AVX2=${ENABLE_AVX2}
+    -DENABLE_AVX512=${ENABLE_AVX512}
+    -DENABLE_AMX=${ENABLE_AMX}
+    -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+    -DDEBUG_INFO=${DEBUG_INFO}
 )
-if(NOT PD_LIBRARY)
-    message(FATAL_ERROR "PD library not found! Build parent pd first.")
-endif()
-
-message(STATUS "Found PD: ${PD_LIBRARY}")
+FetchContent_MakeAvailable(pd)
 
 include_directories(../../include ${np_SOURCE_DIR}/include ${openssl_BINARY_DIR}/include)
 
-add_executable(${READ_CSV})
+add_executable(${PROJECT_NAME})
 
-target_sources(${READ_CSV} PUBLIC main.cpp)
+target_sources(${PROJECT_NAME} PUBLIC main.cpp)
 
-set (LIBS ${PD_LIBRARY}
-    ${PTHREAD}
+set (LIBS ${LIBS}
+    pd
+    pthread
     ssl
-    crypto
-    fmt)
+    crypto)
 
-target_link_libraries(
-    ${READ_CSV}
-    ${LIBS}
-)
+# Apply target-dependent cmake options
+include(${cmake_SOURCE_DIR}/Target.cmake)
 
 install(
-    TARGETS ${READ_CSV}
+    TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT ${READ_CSV}
+    COMPONENT ${PROJECT_NAME}
 )

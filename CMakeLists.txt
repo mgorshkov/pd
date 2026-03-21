@@ -1,147 +1,81 @@
 cmake_minimum_required(VERSION 3.18.0)
 
 # Project name
-set(PD pd)
+set(PROJECT_NAME pd)
 
 # Set up project
-project(${PD} VERSION 0.0.6 DESCRIPTION "Pandas library methods on top of NP library" LANGUAGES CXX)
+project(${PROJECT_NAME} VERSION 0.0.7 DESCRIPTION "⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU" LANGUAGES CXX)
 
-# C++ 20
-set(CMAKE_CXX_STANDARD 20)
-
-# Default build type is Release
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-if (NOT DEFINED CMAKE_INSTALL_BINDIR)
-    set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
-endif()
-
-if (MSVC)
-    add_compile_options(/W4)
-    add_compile_definitions(NOMINMAX) # allow using min/max in the project
-else()
-    add_compile_options(-Wall -Wextra -pedantic)
-endif()
-
-option(ENABLE_OPENMP "Enable OpenMP" OFF)
-if (ENABLE_OPENMP)
-    message("OpenMP ON")
-    find_package(OpenMP)
-    if (OPENMP_FOUND)
-        set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-        set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-    endif()
-endif()
-
-option(ENABLE_SSE2 "Enable SSE2 optimizations" OFF)
-option(ENABLE_SSE3 "Enable SSE3 optimizations" OFF)
-option(ENABLE_AVX "Enable AVX optimizations" OFF)
-option(ENABLE_AVX2 "Enable AVX2 optimizations" OFF)
+# Tune up various optimizations
+# Enable CUDA support
+option(ENABLE_CUDA "Enable CUDA optimizations" ON)
+# Set up options for basic compile optimizations
+option(ENABLE_AVX2 "Enable AVX2 optimizations" ON)
 option(ENABLE_AVX512 "Enable AVX512 optimizations" OFF)
-
-if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if (ENABLE_AVX512)
-        add_compile_definitions(ENABLE_AVX512)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            message("GNU or Clang compiler, AVX512 optimization ON")
-            add_compile_options(-O3 -ftree-vectorize -mavx512f -mavx512dq -mavx512bw -mavx512vbmi -mavx512vbmi2 -mavx512vl)
-        elseif (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-            message("Intel compiler, AVX512 optimization ON")
-            add_compile_options(-O3 -mavx512f -mavx512dq -mavx512bw -mavx512vbmi -mavx512vbmi2 -mavx512vl)
-        elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-            message("MSVC compiler, AVX512 optimization ON")
-            add_compile_options(/O2 /arch:AVX512)
-        endif()
-    endif()
-    if (ENABLE_AVX2)
-        add_compile_definitions(ENABLE_AVX2)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            message("GNU or Clang compiler, AVX2 optimization ON")
-            add_compile_options(-O3 -ftree-vectorize -mavx2)
-        elseif (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-            message("Intel compiler, AVX2 optimization ON")
-            add_compile_options(-O3 -msse4.2 -axAVX,core-avx2)
-            add_compile_options(-axAVX -xAVX)
-        elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-            message("MSVC compiler, AVX2 optimization ON")
-            add_compile_options(/O2 /arch:AVX2)
-        endif()
-    endif()
-    if (ENABLE_AVX)
-        add_compile_definitions(ENABLE_AVX)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            message("GNU or Clang compiler, AVX optimization ON")
-            add_compile_options(-O3 -ftree-vectorize -mavx)
-        elseif (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-            message("Intel compiler, AVX optimization ON")
-            add_compile_options(-Ofast -axAVX -xAVX)
-        elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-            message("MSVC compiler, AVX optimization ON")
-            add_compile_options(/O2 /arch:AVX)
-        endif()
-    endif()
-    if (ENABLE_SSE3)
-        add_compile_definitions(ENABLE_SSE3)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            message("GNU or Clang compiler, SSE3 optimization ON")
-            add_compile_options(-O3 -ftree-vectorize -msse3)
-        elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-            message("Intel compiler, SSE3 optimization ON")
-            add_compile_options(-Ofast -axSSE3 -xSSE3)
-        elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-            message("MSVC compiler, SSE3 optimization ON")
-            add_compile_options(/O2 /arch:SSE2) # VC doesn't support /arch:SSE3
-        endif()
-    endif()
-    if (ENABLE_SSE2)
-        add_compile_definitions(ENABLE_SSE2)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            message("GNU or Clang compiler, SSE2 optimization ON")
-            add_compile_options(-O3 -ftree-vectorize -msse2)
-        elseif (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-            message("Intel compiler, SSE2 optimization ON")
-            add_compile_options(-Ofast -axSSE2 -xSSE2)
-        elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-            message("MSVC compiler, SSE2 optimization ON")
-            if (NOT CMAKE_CL_64)
-                add_compile_options(/O2 /arch:SSE2)
-            endif()
-        endif()
-    endif()
-endif()
+option(ENABLE_AMX "Enable AMX (Advanced Matrix Extensions) optimizations" OFF)
+# Set up options for OpenMP support
+option(ENABLE_OPENMP "Enable OpenMP" ON)
 
 include(FetchContent)
+
+FetchContent_Declare(
+    cmake
+    GIT_REPOSITORY https://github.com/mgorshkov/cmake.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(cmake)
+
+# Apply global cmake options
+include(${cmake_SOURCE_DIR}/Config.cmake)
 
 FetchContent_Declare(
     np
     GIT_REPOSITORY https://github.com/mgorshkov/np.git
     GIT_TAG main
+    CMAKE_ARGS
+    -DENABLE_CUDA=${ENABLE_CUDA}
+    -DENABLE_OPENMP=${ENABLE_OPENMP}
+    -DENABLE_SSE2=${ENABLE_SSE2}
+    -DENABLE_SSE3=${ENABLE_SSE3}
+    -DENABLE_AVX=${ENABLE_AVX}
+    -DENABLE_AVX2=${ENABLE_AVX2}
+    -DENABLE_AVX512=${ENABLE_AVX512}
+    -DENABLE_AMX=${ENABLE_AMX}
+    -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+    -DDEBUG_INFO=${DEBUG_INFO}
 )
-
 FetchContent_MakeAvailable(np)
 
 set(OPENSSL ON)
 
 if (OPENSSL)
+    FetchContent_Declare(
+        openssl
+        GIT_REPOSITORY https://github.com/janbar/openssl-cmake.git
+    )
 
-FetchContent_Declare(
-    openssl
-    GIT_REPOSITORY https://github.com/janbar/openssl-cmake.git
-)
+    FetchContent_MakeAvailable(openssl)
 
-FetchContent_MakeAvailable(openssl)
+    add_library(OpenSSL::SSL ALIAS ssl)
+    add_library(OpenSSL::Crypto ALIAS crypto)
+    # Suppress unused parameter warnings in OpenSSL
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(ssl PRIVATE -Wno-unused-parameter -Wno-missing-field-initializers)
+        target_compile_options(crypto PRIVATE -Wno-unused-parameter -Wno-missing-field-initializers)
+        if(TARGET openssl)
+            target_compile_options(openssl PRIVATE -Wno-unused-parameter -Wno-missing-field-initializers)
+        endif()
+    endif()
 
-add_library(OpenSSL::SSL ALIAS ssl)
-add_library(OpenSSL::Crypto ALIAS crypto)
-
-add_compile_definitions(OPENSSL)
-
+    add_compile_definitions(OPENSSL)
 endif()
 
 add_subdirectory(src)
+
+set(LIBS ${LIBS} np OpenSSL::SSL OpenSSL::Crypto)
+
+# Apply target-dependent cmake options
+include(${cmake_SOURCE_DIR}/Target.cmake)
 
 set(MAKE_DOC OFF)
 
@@ -153,19 +87,19 @@ else()
 endif()
 
 if (MAKE_UNIT_TESTS)
-    message(STATUS "Enable testing in ${PD}")
+    message(STATUS "Enable testing in ${PROJECT_NAME}")
     add_subdirectory(unit_tests)
     include (CTest)
     enable_testing()
 endif()
 
 if (MAKE_DOC)
-    message(STATUS "Enable doxygen in ${PD}")
+    message(STATUS "Enable doxygen in ${PROJECT_NAME}")
     add_subdirectory(doc)
 endif()
 
 install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/pd
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/PROJECT_NAME
     DESTINATION include
-    COMPONENT ${PD_UNIT_TESTS}
+    COMPONENT ${PROJECT_NAME_UNIT_TESTS}
 )

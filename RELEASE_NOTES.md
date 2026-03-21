@@ -1,3 +1,7 @@
+# Release 0.0.7
+## Changes
+* CUDA and SIMD support added
+
 # Release 0.0.6
 ## Changes
 * Adapted for new np version
