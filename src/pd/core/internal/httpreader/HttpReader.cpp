@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -23,6 +23,7 @@ SOFTWARE.
 #include <array>
 #include <cstring>
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/httpreader/HttpReader.hpp>
 
 namespace pd {
@@ -43,7 +44,7 @@ namespace pd {
                 assert(count <= kBufferSize);
 
                 if (count + m_readBuffer.size() > kMaxHttpMessageSize) {
-                    throw std::runtime_error("Too big message");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Too big message");
                 }
 
                 if (count) {
@@ -52,7 +53,7 @@ namespace pd {
                     if (!m_headerFound) {
                         m_headerFound = findHeader();
                         if (!m_headerFound && m_readBuffer.size() > kMaxHttpHeaderSize) {
-                            throw std::runtime_error("Too big header");
+                            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Too big header");
                         }
                     }
                 }
@@ -72,7 +73,7 @@ namespace pd {
                         }
                         std::size_t headerSize = i + 2;
                         if (headerSize > kMaxHttpHeaderSize) {
-                            throw std::runtime_error("Too big header");
+                            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Too big header");
                         }
                         std::string header;
                         header.reserve(headerSize);
@@ -80,7 +81,7 @@ namespace pd {
                         m_httpMessage = std::make_unique<HttpMessage>(header);
                         m_totalLength = m_httpMessage->m_contentLength + headerSize;
                         if (m_totalLength > kMaxHttpMessageSize) {
-                            throw std::runtime_error("Too big message");
+                            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Too big message");
                         }
                         return true;
                     }
@@ -93,7 +94,7 @@ namespace pd {
                 std::string message(m_readBuffer.data(), m_readBuffer.size());
                 m_httpMessage = std::make_unique<HttpMessage>(message);
                 if (!m_httpMessage->isWellFormed()) {
-                    throw std::runtime_error("Message is malformed");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Message is malformed");
                 }
                 if (m_httpMessage->m_statusCode == HttpMessage::StatusCodes::kTemporaryRedirect ||
                     m_httpMessage->m_statusCode == HttpMessage::StatusCodes::kMovedPermanently) {

@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <np/Array.hpp>
 #include <np/DType.hpp>
+#include <pd/Exception.hpp>
 
 namespace pd {
     namespace internal {
@@ -153,9 +154,9 @@ namespace pd {
                         result.m_value = *static_cast<const np::float_ *>(value1) + *static_cast<const np::float_ *>(value2);
                     }
                 } else if (value1.isString()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 } else if (value1.isUnicode()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 }
                 return result;
             }
@@ -203,9 +204,9 @@ namespace pd {
                         result.m_value = *static_cast<const np::float_ *>(value1) - *static_cast<const np::float_ *>(value2);
                     }
                 } else if (value1.isString()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 } else if (value1.isUnicode()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 }
                 return result;
             }
@@ -253,9 +254,9 @@ namespace pd {
                         result.m_value = *static_cast<const np::float_ *>(value1) * *static_cast<const np::float_ *>(value2);
                     }
                 } else if (value1.isString()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 } else if (value1.isUnicode()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 }
                 return result;
             }
@@ -303,9 +304,9 @@ namespace pd {
                         result.m_value = *static_cast<const np::float_ *>(value1) / *static_cast<const np::float_ *>(value2);
                     }
                 } else if (value1.isString()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 } else if (value1.isUnicode()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 }
                 return result;
             }
@@ -352,9 +353,9 @@ namespace pd {
                         m_value = *static_cast<const np::float_ *>(*this) + *static_cast<const np::float_ *>(another);
                     }
                 } else if (isString()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 } else if (isUnicode()) {
-                    throw std::runtime_error("Invalid type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
                 }
                 return *this;
             }
@@ -705,7 +706,7 @@ namespace pd {
                 if (valueSize) {
                     return *valueSize != 0;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool isIntC() const {
@@ -725,7 +726,7 @@ namespace pd {
                 if (value) {
                     return *value;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool isInt() const {
@@ -749,7 +750,7 @@ namespace pd {
                 if (valueIntc) {
                     return *valueIntc;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool isSize() const {
@@ -777,7 +778,7 @@ namespace pd {
                 if (valueIntc) {
                     return *valueIntc;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool isFloat() const {
@@ -809,7 +810,7 @@ namespace pd {
                 if (valueIntc) {
                     return *valueIntc;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool isString() const {
@@ -829,7 +830,7 @@ namespace pd {
                 if (value) {
                     return *value;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool isUnicode() const {
@@ -849,7 +850,7 @@ namespace pd {
                 if (value) {
                     return *value;
                 }
-                throw std::runtime_error("Invalid value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value");
             }
 
             [[nodiscard]] bool empty() const {
@@ -906,9 +907,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) + static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -928,9 +929,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) + static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -950,9 +951,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) + number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -972,9 +973,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) + number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -994,9 +995,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) - static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1016,9 +1017,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) - static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1038,9 +1039,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) - number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1060,9 +1061,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) - number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1082,9 +1083,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) * static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1104,9 +1105,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) * static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1126,9 +1127,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) * number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1148,9 +1149,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) * number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1170,9 +1171,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) / static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1192,9 +1193,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) / static_cast<np::Size>(number)};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1214,9 +1215,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) / number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1236,9 +1237,9 @@ namespace pd {
             } else if (value.isFloat()) {
                 result = Value{*static_cast<const np::float_ *>(value) / number};
             } else if (value.isString()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             } else if (value.isUnicode()) {
-                throw std::runtime_error("Invalid type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
             }
             return result;
         }
@@ -1254,7 +1255,7 @@ inline np::float_ sqrt(const pd::internal::Value &value) {
     if (value.isFloat()) {
         return std::sqrt(static_cast<np::float_>(value));
     }
-    throw std::runtime_error("Invalid type");
+    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
 }
 
 namespace std {
@@ -1274,7 +1275,7 @@ namespace std {
             } else if (value.isUnicode()) {
                 return hash<np::unicode_>()(*static_cast<const np::unicode_ *>(value));
             }
-            throw runtime_error("Invalid type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid type");
         }
     };
 }// namespace std

@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/Indexing.hpp>
 #include <pd/core/series/Series/Series.hpp>
 
@@ -31,12 +32,12 @@ namespace pd {
         : m_data{data}, m_index{index, data.size()}, m_name{name} {
         np::Shape shape = m_data.shape();
         if (shape.size() != 1) {
-            throw std::runtime_error("Only 1D arrays supported");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Only 1D arrays supported");
         }
         m_shape = shape;
         m_size = shape.calcSizeByShape();
         if (!m_index.empty() && m_index.size() != m_size) {
-            throw std::runtime_error("Index has an invalid size");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Index has an invalid size");
         }
     }
 
@@ -46,12 +47,12 @@ namespace pd {
         : m_data{std::move(data)}, m_index{index, data.size()}, m_name{name} {
         np::Shape shape = m_data.shape();
         if (shape.size() != 1) {
-            throw std::runtime_error("Only 1D arrays supported");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Only 1D arrays supported");
         }
         m_shape = shape;
         m_size = shape.calcSizeByShape();
         if (!m_index.empty() && m_index.size() != m_size) {
-            throw std::runtime_error("Index has an invalid size");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Index has an invalid size");
         }
     }
 
@@ -135,7 +136,7 @@ namespace pd {
             } else if (value.isInt()) {
                 array->set(row, static_cast<np::float_>(*static_cast<const np::int_ *>(value)));
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         } else if (m_data.isStringArray()) {
             auto *array = static_cast<np::Array<np::string_> *>(m_data);
@@ -144,7 +145,7 @@ namespace pd {
             auto *array = static_cast<np::Array<np::unicode_> *>(m_data);
             array->set(row, *static_cast<const np::unicode_ *>(value));
         } else {
-            throw std::runtime_error("Invalid value type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
         }
     }
 
@@ -174,7 +175,7 @@ namespace pd {
             const auto *array = static_cast<const np::Array<internal::Value> *>(m_data);
             return internal::Value{array->get(row)};
         } else {
-            throw std::runtime_error("Invalid value type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
         }
         return internal::Value{};
     }
@@ -205,7 +206,7 @@ namespace pd {
             const auto *array = static_cast<const np::Array<internal::Value> *>(m_data);
             return internal::Value{array->get(row)};
         } else {
-            throw std::runtime_error("Invalid value type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
         }
         return internal::Value{};
     }
@@ -220,7 +221,7 @@ namespace pd {
             np::Size i = std::stoi(cond);
 
             if (i >= size()) {
-                throw std::runtime_error("Index " + std::to_string(i) + " out of bounds");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Index " + std::to_string(i) + " out of bounds");
             }
             const auto &element = iloc(i);
             if (element.isBool()) {
@@ -245,7 +246,7 @@ namespace pd {
                 auto array = np::Array<np::unicode_>{*static_cast<const np::unicode_ *>(element)};
                 return Series{array, m_name};
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         }
 
@@ -265,7 +266,7 @@ namespace pd {
         }
         np::Size length = lastIndex - firstIndex;
         if (length > size()) {
-            throw std::runtime_error("Incorrect range");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Incorrect range");
         }
 
         np::Shape shape{lastIndex - firstIndex};
@@ -306,12 +307,12 @@ namespace pd {
             }
             return {array, m_name};
         } else {
-            throw std::runtime_error("Unknown type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown type");
         }
     }
 
     Series Series::callable1(const std::string &) const {
-        throw std::runtime_error("not implemented");
+        PD_THROW_WITH_STACKTRACE(std::runtime_error, "not implemented");
     }
 
     Series Series::iloc(const std::string &cond) const {
@@ -331,13 +332,13 @@ namespace pd {
             }
         }
 
-        throw std::runtime_error("Invalid operator[] argument");
+        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid operator[] argument");
     }
 
     Series Series::iloc(const std::vector<bool> &indexes) const {
         auto shape{m_shape};
         if (indexes.size() != size()) {
-            throw std::runtime_error("Incorrect range");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Incorrect range");
         }
 
         if (dtype() == "float64") {
@@ -383,7 +384,7 @@ namespace pd {
             }
             return {array, m_name};
         } else {
-            throw std::runtime_error("Unknown type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Unknown type");
         }
     }
 
@@ -473,7 +474,7 @@ namespace pd {
             else
                 return mean_(*array);
         } else {
-            throw std::runtime_error("Cannot calculate mean of a non-number array");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot calculate mean of a non-number array");
         }
     }
 
@@ -629,7 +630,7 @@ namespace pd {
             else
                 return std__(*array);
         } else {
-            throw std::runtime_error("Cannot calculate mean of a non-number array");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot calculate mean of a non-number array");
         }
     }
 
@@ -665,14 +666,14 @@ namespace pd {
             else
                 return var_(*array);
         } else {
-            throw std::runtime_error("Cannot calculate mean of a non-number array");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot calculate mean of a non-number array");
         }
     }
 
     Series Series::replace(internal::Value to_replace, internal::Value value) const {
         if (m_data.isIntArray()) {
             if (!to_replace.isInt()) {
-                throw std::runtime_error("Cannot replace to an non-int value in int array");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace to an non-int value in int array");
             }
             const auto *to_replaceIntPtr = static_cast<const np::int_ *>(to_replace);
             if (value.isInt()) {
@@ -698,13 +699,13 @@ namespace pd {
                 }
                 return Series{arrayDst, m_name};
             } else if (value.isString() || value.isUnicode()) {
-                throw std::runtime_error("Cannot replace value to string in int array");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace value to string in int array");
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         } else if (m_data.isFloatArray()) {
             if (!to_replace.isIntC() && !to_replace.isInt() && !to_replace.isFloat()) {
-                throw std::runtime_error("Cannot replace a value of different type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace a value of different type");
             }
             if (value.isInt()) {
                 const auto *valueIntPtr = static_cast<const np::int_ *>(value);
@@ -764,13 +765,13 @@ namespace pd {
                 }
                 return Series{arrayDst, m_name};
             } else if (value.isString() || value.isUnicode()) {
-                throw std::runtime_error("Cannot replace value to string in float array");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace value to string in float array");
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         } else if (m_data.isStringArray()) {
             if (!to_replace.isString()) {
-                throw std::runtime_error("Cannot replace a value of different type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace a value of different type");
             }
             const auto *to_replaceString = static_cast<const np::string_ *>(to_replace);
             if (value.isString()) {
@@ -811,13 +812,13 @@ namespace pd {
                 }
                 return Series{arrayDst, m_name};
             } else if (value.isIntC() || value.isInt() || value.isFloat()) {
-                throw std::runtime_error("Cannot replace value to number in string array");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace value to number in string array");
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         } else if (m_data.isUnicodeArray()) {
             if (!to_replace.isUnicode()) {
-                throw std::runtime_error("Cannot replace a value of different type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace a value of different type");
             }
             const auto *to_replaceUnicode = static_cast<const np::unicode_ *>(to_replace);
             if (value.isString()) {
@@ -856,44 +857,44 @@ namespace pd {
                 }
                 return Series{arrayDst, m_name};
             } else if (value.isIntC() || value.isInt() || value.isFloat()) {
-                throw std::runtime_error("Cannot replace value to number in unicode array");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot replace value to number in unicode array");
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         } else {
-            throw std::runtime_error("Invalid value type");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
         }
     }
 
     internal::Value Series::dot(const Series &another) const {
         if (shape().size() != 1 || another.shape().size() != 1 || shape() != another.shape()) {
-            throw std::runtime_error("Shapes are different or arguments are not 1D arrays");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Shapes are different or arguments are not 1D arrays");
         }
         internal::Value result{0};
         for (np::Size i = 0; i < size(); ++i) {
             internal::Value multipleResult{};
             if (m_data.isIntCArray()) {
                 if (!another.m_data.isIntCArray()) {
-                    throw std::runtime_error("Invalid value type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
                 }
                 result += static_cast<np::intc>(at(i)) * static_cast<np::intc>(another.at(i));
             } else if (m_data.isIntArray()) {
                 if (!another.m_data.isIntArray()) {
-                    throw std::runtime_error("Invalid value type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
                 }
                 result += static_cast<np::int_>(at(i)) * static_cast<np::int_>(another.at(i));
             } else if (m_data.isSizeArray()) {
                 if (!another.m_data.isSizeArray()) {
-                    throw std::runtime_error("Invalid value type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
                 }
                 result += static_cast<np::Size>(at(i)) * static_cast<np::Size>(another.at(i));
             } else if (m_data.isFloatArray()) {
                 if (!another.m_data.isFloatArray()) {
-                    throw std::runtime_error("Invalid value type");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
                 }
                 result += static_cast<np::float_>(at(i)) * static_cast<np::float_>(another.at(i));
             } else {
-                throw std::runtime_error("Invalid value type");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid value type");
             }
         }
         return result;

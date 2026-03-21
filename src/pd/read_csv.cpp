@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -24,6 +24,7 @@ SOFTWARE.
 #include <filesystem>
 #include <string>
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/httpreader/HttpHandler.hpp>
 #include <pd/core/internal/httpreader/HttpsHandler.hpp>
 #include <pd/core/internal/httpreader/Initializer.hpp>
@@ -124,7 +125,7 @@ namespace pd {
                         } else if (columns[i].isUnicode()) {
                             columnType = ReadCsvContext::ColumnType::kUnicode;
                         } else {
-                            throw std::runtime_error("Invalid column type");
+                            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid column type");
                         }
                         context->m_headers.emplace_back(static_cast<np::intc>(i), columnType);
                     }
@@ -141,12 +142,12 @@ namespace pd {
                     } else if (columns[i].isUnicode()) {
                         columnType = ReadCsvContext::ColumnType::kUnicode;
                     } else {
-                        throw std::runtime_error("Invalid column type");
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid column type");
                     }
                     context->m_headers.emplace_back(static_cast<np::intc>(i), columnType);
                 }
             } else {
-                throw std::runtime_error("Invalid settings.header value");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid settings.header value");
             }
         }
         if (needToAddData) {
@@ -162,7 +163,7 @@ namespace pd {
                     } else if (columns[i].isUnicode()) {
                         columnType = ReadCsvContext::ColumnType::kUnicode;
                     } else {
-                        throw std::runtime_error("Invalid column type");
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid column type");
                     }
                 }
                 if (!context->m_dataFrame.hasColumn(columnName)) {
@@ -192,7 +193,7 @@ namespace pd {
                             break;
                         }
                         case ReadCsvContext::ColumnType::kNone:
-                            throw std::runtime_error("Invalid column type");
+                            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid column type");
                     }
                 }
                 context->m_dataFrame.set(context->m_row, columnName, columns.at(i));
@@ -252,7 +253,7 @@ namespace pd {
         std::fstream stream;
         stream.open(filepath, std::ios::in);
         if (!stream.is_open()) {
-            throw std::runtime_error("Cannot open file " + filepath);
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Cannot open file " + filepath);
         }
         stream.seekg(0, std::ios::end);
         auto size = stream.tellg();
@@ -275,7 +276,7 @@ namespace pd {
 #ifdef OPENSSL
             readWeb<SslInitializer, HttpsHandler>(uri, &context);
 #else
-            throw std::runtime_error("SSL support is not enabled");
+            PD_THROW_WITH_STACKTRACE(std::runtime_error, "SSL support is not enabled");
 #endif
         } else if (uri.m_scheme == Scheme::kFtp) {
             readFtp(uri, &context);

@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -25,6 +25,7 @@ SOFTWARE.
 #include <iomanip>
 #include <sstream>
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/Utils.hpp>
 #include <pd/core/internal/base64/Base64.hpp>
 #include <pd/core/internal/httpreader/HttpMessage.hpp>
@@ -97,7 +98,7 @@ namespace pd {
                 if (!m_firstLineParsed) {
                     auto method = std::strtok(line.data(), kStatusSeparator);
                     if (method == nullptr) {
-                        throw std::runtime_error("Invalid header format");
+                        PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid header format");
                     }
                     m_type = Type::kResponse;
                     for (std::size_t i = 0; i < static_cast<std::size_t>(Method::kLast); ++i) {
@@ -111,7 +112,7 @@ namespace pd {
                     if (m_type == Type::kRequest) {
                         auto status = std::strtok(nullptr, kStatusSeparator);
                         if (status == nullptr) {
-                            throw std::runtime_error("Invalid header format");
+                            PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid header format");
                         }
                         m_uri.m_url = status;
                         version = std::strtok(nullptr, kStatusSeparator);
@@ -127,7 +128,7 @@ namespace pd {
 
                 std::size_t pos = line.find(kFieldSeparator);
                 if (pos == std::string::npos) {
-                    throw std::runtime_error("Invalid header format");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid header format");
                 }
                 std::string field = line.substr(0, pos);
                 std::string value = line.substr(pos + strlen(kFieldSeparator));

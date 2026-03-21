@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/Array.hpp>
 #include <pd/core/internal/Index.hpp>
 #include <pd/core/internal/Value.hpp>
@@ -130,10 +131,10 @@ namespace pd {
 
         friend inline Series operator+(const Series &series1, const Series &series2) {
             if (series1.m_shape != series2.m_shape) {
-                throw std::runtime_error("Different shapes");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different shapes");
             }
             if (series1.m_name != series2.m_name) {
-                throw std::runtime_error("Different names");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different names");
             }
             Series result{series1.m_shape, series1.m_name};
             for (np::Size i = 0; i < series1.size(); ++i) {
@@ -144,10 +145,10 @@ namespace pd {
 
         friend inline Series operator-(const Series &series1, const Series &series2) {
             if (series1.m_shape != series2.m_shape) {
-                throw std::runtime_error("Different shapes");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different shapes");
             }
             if (series1.m_name != series2.m_name) {
-                throw std::runtime_error("Different names");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different names");
             }
             Series result{series1.m_shape, series1.m_name};
             for (np::Size i = 0; i < series1.size(); ++i) {
@@ -158,10 +159,10 @@ namespace pd {
 
         friend inline Series operator*(const Series &series1, const Series &series2) {
             if (series1.m_shape != series2.m_shape) {
-                throw std::runtime_error("Different shapes");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different shapes");
             }
             if (series1.m_name != series2.m_name) {
-                throw std::runtime_error("Different names");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different names");
             }
             Series result{series1.m_shape, series1.m_name};
             for (np::Size i = 0; i < series1.size(); ++i) {
@@ -172,10 +173,10 @@ namespace pd {
 
         friend inline Series operator/(const Series &series1, const Series &series2) {
             if (series1.m_shape != series2.m_shape) {
-                throw std::runtime_error("Different shapes");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different shapes");
             }
             if (series1.m_name != series2.m_name) {
-                throw std::runtime_error("Different names");
+                PD_THROW_WITH_STACKTRACE(std::runtime_error, "Different names");
             }
             Series result{series1.m_shape, series1.m_name};
             for (np::Size i = 0; i < series1.size(); ++i) {

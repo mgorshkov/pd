@@ -1,5 +1,5 @@
 /*
-Pandas library methods on top of NP library
+⚡ Data manipulation and analysis library in C++ | CUDA GPU + (AVX2/AVX512/AMX) CPU
 
 Copyright (c) 2023-2026 Mikhail Gorshkov (mikhail.gorshkov@gmail.com)
 
@@ -25,6 +25,7 @@ SOFTWARE.
 #include <numeric>
 #include <vector>
 
+#include <pd/Exception.hpp>
 #include <pd/core/internal/Value.hpp>
 
 namespace pd {
@@ -49,7 +50,7 @@ namespace pd {
             Index(const std::vector<internal::Value> &index, np::Size count)
                 : m_namedIndex{index}, m_nameToOffset{}, m_count{count} {
                 if (!index.empty() && count > 0) {
-                    throw std::runtime_error("Invalid index");
+                    PD_THROW_WITH_STACKTRACE(std::runtime_error, "Invalid index");
                 }
                 for (np::Size i = 0; i < index.size(); ++i) {
                     m_nameToOffset[index[i]] = i;
